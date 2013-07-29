@@ -1,6 +1,6 @@
 var util = require('util'),
     connect = require('connect'),
-    port = 1337;
+    port = process.env.PORT;
 
 connect.createServer(connect.static(__dirname + "/web")).listen(port);
 util.puts('Listening on ' + port + '...');
