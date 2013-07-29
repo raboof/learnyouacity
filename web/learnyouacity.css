@@ -3,3 +3,11 @@
   height: 600px;
   border: solid 1px;
 }
+
+#challenge {
+  margin-bottom: 10px;
+}
+
+#message {
+  margin-bottom: 10px;
+}
