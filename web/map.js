@@ -150,7 +150,8 @@ function LMap(id) {
   }
 
   function getCurrentBounds() {
-    return map.getExtent().transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+    var extent = map.getExtent();
+    return extent.transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
   }
 
   // Public API

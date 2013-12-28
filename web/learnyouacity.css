@@ -6,6 +6,7 @@
 
 #challenge {
   margin-bottom: 10px;
+  display: none;
 }
 
 #message {

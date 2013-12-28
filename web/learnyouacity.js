@@ -6,6 +6,7 @@ function learnmeacity() {
   var map = new LMap('map');
   var streetdata = new LStreetData('http://www.overpass-api.de/api/xapi');
   var cityBounds;
+  var cityZoom;
   var levelsToUse = 5;
   var levelStep = 2;
 
@@ -29,6 +30,17 @@ function learnmeacity() {
     map.zoomTo(previousBounds, currentLevel);
     map.highlight(currentChallenge.ways);
     map.waitForClick(newChallenge);
+  }
+
+  function showButton(msg, onclick) {
+    $('#button')
+      .show()
+      .text(msg)
+      .on('click', onclick);
+  }
+
+  function hideButton() {
+    $('#button').hide();
   }
 
   function showMessage(msg) {
@@ -81,7 +93,7 @@ function learnmeacity() {
 
   function showChallenge(challenge, cityBounds) {
     currentChallenge = challenge;
-    currentBounds = map.zoomTo(cityBounds);
+    currentBounds = map.zoomTo(cityBounds, cityZoom);
     currentLevel = map.getZoom();
     maxLevel = currentLevel + levelsToUse;
     $('#challengeStreetName').text(challenge.name);
@@ -106,11 +118,24 @@ function learnmeacity() {
   }
 
   function citySelected(bounds) {
+    console.log('City selected, current zoom level is ' + map.getZoom());
     cityBounds = bounds;
+    cityZoom = map.getZoom();
 
-    map.zoomTo(bounds);
+    map.zoomTo(bounds, map.getZoom());
     streetdata.ways(bounds, waysSelected, error);
   }
 
-  map.selectBox(citySelected);
+  function startGame() {
+    var bounds = map.getCurrentBounds();
+    hideButton();
+    citySelected(bounds);
+  }
+
+  function selectPlayingField() {
+    showMessage('Zoom to the region you want to learn');
+    showButton('Start Game', startGame);
+  }
+
+  selectPlayingField();
 }
