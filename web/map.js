@@ -90,76 +90,77 @@ function LMap(id) {
     solutionLayer.display(true);
   }
 
-  return {
-    selectBox: function(callback) {
-      var control = new OpenLayers.Control();
-      OpenLayers.Util.extend(control, {
-        draw: function () {
-          // this Handler.Box will intercept the shift-mousedown
-          // before Control.MouseDefault gets to see it
-          this.box = new OpenLayers.Handler.Box( control,
-            { 
-              done: function(bounds) { 
-                      navigationControl.deactivate();
-                      map.removeControl(navigationControl);
-                      zoomControl.deactivate();
-                      map.removeControl(zoomControl);
-                      map.removeControl(control);
-                      this.deactivate();
-                      callback(lonLatFromPixel(bounds));
-                    } 
-            },
-            { keyMask: OpenLayers.Handler.MOD_SHIFT });
-          this.box.activate();
-        },
-      });
-      map.addControl(control);
-    },
+  function selectBox(callback) {
+    var control = new OpenLayers.Control();
+    OpenLayers.Util.extend(control, {
+      draw: function () {
+        // this Handler.Box will intercept the shift-mousedown
+        // before Control.MouseDefault gets to see it
+        this.box = new OpenLayers.Handler.Box( control,
+          { 
+            done: function(bounds) { 
+                    navigationControl.deactivate();
+                    map.removeControl(navigationControl);
+                    zoomControl.deactivate();
+                    map.removeControl(zoomControl);
+                    map.removeControl(control);
+                    this.deactivate();
+                    callback(lonLatFromPixel(bounds));
+                  } 
+          },
+          { keyMask: OpenLayers.Handler.MOD_SHIFT });
+        this.box.activate();
+      },
+    });
+    map.addControl(control);
+  }
 
-    zoomTo: function(bounds, zoom) {
-      var projected = bounds.clone().transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+  function zoomTo(bounds, zoom) {
+    var projected = bounds.clone().transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
 
-      var center = projected.getCenterLonLat();
-      if (!zoom) {
-        zoom = map.getZoomForExtent(projected);
-        console.log('invented zoom level', zoom);
-      }
-
-      map.setCenter(center, zoom);
-      console.log("Setting center to ", center, " and zooming to ", zoom);
-   
-      return map.getExtent().transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
-    }, 
-
-    zoomToLonLat: function(lonlat, zoomlevel) {
-      var center = lonlat.clone().transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
-
-      map.setCenter(center, zoomlevel);
-
-      return map.getExtent().transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
-    },
-
-    getZoom: function() {
-      return map.getZoom();
-    },
-
-    clear: function() {
-      solutionLayer.removeAllFeatures();
-    },
-
-    highlight: function(ways) {
-      for (var i = 0; i < ways.length; i++) {
-        highlightWay(ways[i]);
-      }
-    },
-
-    waitForClick: function(callback) {
-     clickControl.callback = callback;
-     clickControl.activate();
-    },
-    
-    getProjectionObject: function() {
-      return map.getProjectionObject();
+    var center = projected.getCenterLonLat();
+    if (!zoom) {
+      zoom = map.getZoomForExtent(projected);
+      console.log('invented zoom level', zoom);
     }
+
+    map.setCenter(center, zoom);
+    console.log("Setting center to ", center, " and zooming to ", zoom);
+   
+    return map.getExtent().transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+  }
+
+  function zoomToLonLat(lonlat, zoomlevel) {
+    var center = lonlat.clone().transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+
+    map.setCenter(center, zoomlevel);
+
+    return map.getExtent().transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+  }
+
+  function waitForClick(callback) {
+    clickControl.callback = callback;
+    clickControl.activate();
+  }
+
+  function highlight(ways) {
+    for (var i = 0; i < ways.length; i++) {
+      highlightWay(ways[i]);
+    }
+  }
+
+  // Public API
+  return {
+    // Allow the user to select a box using shift-click, call a callback with the bounds on success
+    selectBox: selectBox,
+    // center the map to the middle of the 'bounds' and zoom to the zoom level specified
+    zoomTo: zoomTo, 
+    zoomToLonLat: zoomToLonLat,
+    getZoom: function() { return map.getZoom(); },
+    clear: function()   { solutionLayer.removeAllFeatures(); },
+
+    highlight: highlight,
+    waitForClick: waitForClick,
+    getProjectionObject: function() { return map.getProjectionObject(); }
   };
 };
