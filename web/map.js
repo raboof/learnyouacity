@@ -135,7 +135,7 @@ function LMap(id) {
 
     map.setCenter(center, zoomlevel);
 
-    return map.getExtent().transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+    return getCurrentBounds();
   }
 
   function waitForClick(callback) {
@@ -149,6 +149,10 @@ function LMap(id) {
     }
   }
 
+  function getCurrentBounds() {
+    return map.getExtent().transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+  }
+
   // Public API
   return {
     // Allow the user to select a box using shift-click, call a callback with the bounds on success
@@ -157,6 +161,7 @@ function LMap(id) {
     zoomTo: zoomTo, 
     zoomToLonLat: zoomToLonLat,
     getZoom: function() { return map.getZoom(); },
+    getCurrentBounds: getCurrentBounds,
     clear: function()   { solutionLayer.removeAllFeatures(); },
 
     highlight: highlight,
