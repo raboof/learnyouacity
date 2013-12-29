@@ -25,10 +25,9 @@ function learnmeacity() {
     return obj[Math.floor(obj.length * Math.random())];
   }
 
-  function invalidResponseReceived(previousBounds) {
+  function invalidResponseReceived() {
     map.clear();
     showMessage('Bummer! You failed to locate ' + currentChallenge.name + ' - here it is!');
-    map.zoomTo(previousBounds, currentLevel);
     map.highlight(currentChallenge.ways);
     map.waitForClick(newChallenge);
   }
@@ -64,14 +63,14 @@ function learnmeacity() {
     }
   }
 
-  function containsChallenge(quadrant) {
+  function containsChallenge(selectedArea) {
     var ways = currentChallenge.ways;
     for (var i = 0; i < ways.length; i++) {
       var way = ways[i];
       for (var j = 0; j < way.nodes.length; j++) { 
         var node = $(way.nodes[j]);
         var lonlat = new OpenLayers.LonLat(node.attr('lon'), node.attr('lat'));
-        if (quadrant.containsLonLat(lonlat)) {
+        if (selectedArea.containsLonLat(lonlat)) {
           return true;
         }
       }
@@ -79,17 +78,18 @@ function learnmeacity() {
     return false;
   }
 
-  function getSelectedBounds(lonlat) {
-    return map.zoomToLonLat(lonlat, currentLevel+levelStep);
-  }
-
   function receiveResponse(lonlat) {
+    // Zoom in and determine bounds of selected area
     var previousBounds = currentBounds;
-    var selectedBounds = getSelectedBounds(lonlat);
-    if (containsChallenge(selectedBounds))
+    map.zoomToLonLat(lonlat, currentLevel+levelStep);
+    var selectedBounds = map.getCurrentBounds();
+
+    if (containsChallenge(selectedBounds)) {
       validResponseReceived(selectedBounds);
-    else
-      invalidResponseReceived(previousBounds);
+    } else {
+      map.zoomTo(previousBounds, currentLevel);
+      invalidResponseReceived();
+    }
   }
 
   function showChallenge(challenge, cityBounds) {
