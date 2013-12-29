@@ -23,6 +23,7 @@ function LMap(id) {
       initialize: function(options) {
                       this.handlerOptions = OpenLayers.Util.extend(
                         { "single" :         true, 
+                          "stopSingle" :     true,
                           "stopDouble" :     true,
                           "pixelTolerance" : 10
                         }, this.defaultHandlerOptions
