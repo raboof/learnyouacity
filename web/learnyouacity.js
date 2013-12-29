@@ -9,6 +9,8 @@ function learnmeacity() {
   var cityZoom;
   var levelsToUse = 5;
   var levelStep = 2;
+  // When starting out with a larger map getting the streets will be too slow
+  var minimumInitialLevel = 13;
 
   var maxLevel;
   var currentChallenge;
@@ -117,20 +119,27 @@ function learnmeacity() {
     newChallenge();
   }
 
-  function citySelected(bounds) {
+  function citySelected(bounds, zoom) {
     console.log('City selected, current zoom level is ' + map.getZoom());
     cityBounds = bounds;
-    cityZoom = map.getZoom();
+    cityZoom = zoom;
 
     map.removeNavigationControls();
-    map.zoomTo(bounds, map.getZoom());
+    map.zoomTo(bounds, zoom);
+    showMessage("Loading streets, please wait...");
     streetdata.ways(bounds, waysSelected, error);
   }
 
   function startGame() {
     var bounds = map.getCurrentBounds();
-    hideButton();
-    citySelected(bounds);
+    var zoom = map.getZoom();
+
+    if (zoom < minimumInitialLevel) {
+      showMessage("Area too large - please zoom in further");
+    } else {
+      hideButton();
+      citySelected(bounds, zoom);
+    }
   }
 
   function selectPlayingField() {
