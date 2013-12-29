@@ -28,7 +28,6 @@ function learnmeacity() {
   function invalidResponseReceived(previousBounds) {
     map.clear();
     showMessage('Bummer! You failed to locate ' + currentChallenge.name + ' - here it is!');
-    console.log('zooming to', currentLevel);
     map.zoomTo(previousBounds, currentLevel);
     map.highlight(currentChallenge.ways);
     map.waitForClick(newChallenge);
@@ -120,7 +119,6 @@ function learnmeacity() {
   }
 
   function citySelected(bounds, zoom) {
-    console.log('City selected, current zoom level is ' + map.getZoom());
     cityBounds = bounds;
     cityZoom = zoom;
 

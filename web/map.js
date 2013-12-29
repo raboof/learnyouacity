@@ -125,11 +125,9 @@ function LMap(id) {
     var center = projected.getCenterLonLat();
     if (!zoom) {
       zoom = map.getZoomForExtent(projected);
-      console.log('invented zoom level', zoom);
     }
 
     map.setCenter(center, zoom);
-    console.log("Setting center to ", center, " and zooming to ", zoom);
    
     return map.getExtent().transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
   }
