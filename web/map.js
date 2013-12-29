@@ -19,8 +19,8 @@ function LMap(id) {
     zoom: 10 
   }); 
 
-    OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
-        initialize: function(options) {
+  OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {
+      initialize: function(options) {
                       this.handlerOptions = OpenLayers.Util.extend(
                         { "single" :         true, 
                           "stopDouble" :     true,
@@ -35,25 +35,18 @@ function LMap(id) {
                             'click': this.onClick,
                         }, this.handlerOptions
                       );
-        },
-        onClick: function(evt) { 
-          var pixel = new OpenLayers.Pixel(evt.xy.x, evt.xy.y);
-          var lonlat = map.getLonLatFromPixel(pixel); 
-          lonlat.transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
-          var control = this;
-          control.deactivate();
-          this.callback(lonlat);
-        }
-      });
-      var clickControl = new OpenLayers.Control.Click();
-      map.addControl(clickControl);
- 
-
-    /*var markers = new OpenLayers.Layer.Markers( "Markers" );
-    map.addLayer(markers);
-    var size = new OpenLayers.Size(21,25);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-    var icon = new OpenLayers.Icon('http://www.openlayers.org/dev/img/marker.png', size, offset);*/
+      },
+      onClick: function(evt) { 
+        var pixel = new OpenLayers.Pixel(evt.xy.x, evt.xy.y);
+        var lonlat = map.getLonLatFromPixel(pixel); 
+        lonlat.transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+        var control = this;
+        control.deactivate();
+        this.callback(lonlat);
+      }
+    });
+  var clickControl = new OpenLayers.Control.Click();
+  map.addControl(clickControl);
 
   function lonLatFromPixel(bounds) {
       var lowerLeftLonLat = map.getLonLatFromPixel(new OpenLayers.Pixel(
