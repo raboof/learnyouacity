@@ -38,12 +38,16 @@ function LMap(id) {
                       );
       },
       onClick: function(evt) { 
-        var pixel = new OpenLayers.Pixel(evt.xy.x, evt.xy.y);
-        var lonlat = map.getLonLatFromPixel(pixel); 
-        lonlat.transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
-        var control = this;
-        control.deactivate();
-        this.callback(lonlat);
+        if (this.callback) {
+          var callback = this.callback;
+          this.callback = null;
+
+          var pixel = new OpenLayers.Pixel(evt.xy.x, evt.xy.y);
+          var lonlat = map.getLonLatFromPixel(pixel); 
+          lonlat.transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+ 
+          callback(lonlat);
+        }
       }
     });
   var clickControl = new OpenLayers.Control.Click();
@@ -89,6 +93,8 @@ function LMap(id) {
     map.removeControl(navigationControl);
     zoomControl.deactivate();
     map.removeControl(zoomControl);
+
+    clickControl.activate();
   }
 
   function selectBox(callback) {
@@ -136,7 +142,6 @@ function LMap(id) {
 
   function waitForClick(callback) {
     clickControl.callback = callback;
-    clickControl.activate();
   }
 
   function highlight(ways) {
