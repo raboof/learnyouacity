@@ -90,6 +90,13 @@ function LMap(id) {
     solutionLayer.display(true);
   }
 
+  function removeNavigationControls() {
+    navigationControl.deactivate();
+    map.removeControl(navigationControl);
+    zoomControl.deactivate();
+    map.removeControl(zoomControl);
+  }
+
   function selectBox(callback) {
     var control = new OpenLayers.Control();
     OpenLayers.Util.extend(control, {
@@ -99,10 +106,7 @@ function LMap(id) {
         this.box = new OpenLayers.Handler.Box( control,
           { 
             done: function(bounds) { 
-                    navigationControl.deactivate();
-                    map.removeControl(navigationControl);
-                    zoomControl.deactivate();
-                    map.removeControl(zoomControl);
+                    removeNavigationControls();
                     map.removeControl(control);
                     this.deactivate();
                     callback(lonLatFromPixel(bounds));
@@ -163,6 +167,7 @@ function LMap(id) {
     zoomToLonLat: zoomToLonLat,
     getZoom: function() { return map.getZoom(); },
     getCurrentBounds: getCurrentBounds,
+    removeNavigationControls: removeNavigationControls,
     clear: function()   { solutionLayer.removeAllFeatures(); },
 
     highlight: highlight,

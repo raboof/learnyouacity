@@ -122,6 +122,7 @@ function learnmeacity() {
     cityBounds = bounds;
     cityZoom = map.getZoom();
 
+    map.removeNavigationControls();
     map.zoomTo(bounds, map.getZoom());
     streetdata.ways(bounds, waysSelected, error);
   }
