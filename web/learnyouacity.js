@@ -25,7 +25,7 @@ function learnmeacity() {
 
   function invalidResponseReceived(previousBounds) {
     map.clear();
-    showMessage('Failed to locate ' + currentChallenge.name + ', highlighting it.');
+    showMessage('Bummer! You failed to locate ' + currentChallenge.name + ' - here it is!');
     console.log('zooming to', currentLevel);
     map.zoomTo(previousBounds, currentLevel);
     map.highlight(currentChallenge.ways);
@@ -133,7 +133,7 @@ function learnmeacity() {
   }
 
   function selectPlayingField() {
-    showMessage('Zoom to the region you want to learn');
+    showMessage('Please zoom to the region you want to learn');
     showButton('Start Game', startGame);
   }
 

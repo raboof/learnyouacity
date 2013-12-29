@@ -1,12 +1,34 @@
+body {
+  font-family: sans-serif;
+}
+
+#moreinfo {
+  margin-top: 20px;
+  display: none;
+}
+
 #map {
   width: 100%;
   height: 600px;
   border: solid 1px;
 }
 
+#controls {
+  text-align: center;
+}
+
 #challenge {
   margin-bottom: 10px;
   display: none;
+}
+
+#button {
+  background-color: yellow;
+  padding: 10px;
+  display: block;
+  width: 10%;
+  margin-left: 45%;
+  text-decoration: none;
 }
 
 #message {
